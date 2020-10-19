@@ -1,8 +1,6 @@
-import json
 import os
 from os.path import join, dirname
 import dotenv
-import logging
 import pymysql.cursors
 
 dotenv_path = join(dirname(__file__), '.env')
@@ -15,7 +13,6 @@ DB_Password = os.environ.get("pw")
 DB_Name = os.environ.get("dbname")
 
 
-
 def lambda_handler(event, context):
     connection = pymysql.connect(host=DB_Host,
                                  user=DB_User,
@@ -23,4 +20,14 @@ def lambda_handler(event, context):
                                  db=DB_Name,
                                  charset='utf8',
                                  cursorclass=pymysql.cursors.DictCursor)
+    with connection.cursor() as cursor:
+        sql = "SELECT * FROM t2"
+        cursor.execute(sql)
+        results = cursor.fetchall()
+        for r in results:
+            print(r)
+
     connection.close()
+
+
+lambda_handler("", "");
