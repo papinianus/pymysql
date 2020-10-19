@@ -19,7 +19,8 @@ def lambda_handler(event, context):
                                  password=DB_Password,
                                  db=DB_Name,
                                  charset='utf8',
-                                 cursorclass=pymysql.cursors.DictCursor)
+                                 cursorclass=pymysql.cursors.DictCursor,
+                                 ssl=dict(ssl={'ca': 'rds-ca-2019-root.pem'}))
     with connection.cursor() as cursor:
         sql = "SELECT * FROM t2"
         cursor.execute(sql)
