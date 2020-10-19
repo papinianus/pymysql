@@ -2,6 +2,7 @@ import os
 from os.path import join, dirname
 import dotenv
 import pymysql.cursors
+import boto3
 
 dotenv_path = join(dirname(__file__), '.env')
 dotenv.load_dotenv(dotenv_path)
@@ -14,9 +15,13 @@ DB_Name = os.environ.get("dbname")
 
 
 def lambda_handler(event, context):
+    client = boto3.client("rds")
+    password = client.generate_db_auth_token(
+        DBHostname=DB_Host, Port=3306, DBUsername=DB_User
+    )
     connection = pymysql.connect(host=DB_Host,
                                  user=DB_User,
-                                 password=DB_Password,
+                                 password=password,
                                  db=DB_Name,
                                  charset='utf8',
                                  cursorclass=pymysql.cursors.DictCursor,
